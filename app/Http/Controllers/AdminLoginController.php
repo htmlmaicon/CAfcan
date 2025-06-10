@@ -1,17 +1,15 @@
 <?php
-// filepath: c:\Users\Maicon\Desktop\Cafcan\Cafcan\app\Http\Controllers\AdminLoginController.php
 
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-
 class AdminLoginController extends Controller
 {
     public function showLoginForm()
     {
-        return view('admin.login');
+        return view('admin.login'); // Corrigido para retornar view 'admin.acesso'
     }
 
     public function login(Request $request)
@@ -23,6 +21,7 @@ class AdminLoginController extends Controller
             'password' => 'required|string|min:4',
         ]);
 
+        // Usa o guard 'web' para admin
         if (Auth::guard('web')->attempt($credentials)) {
             $request->session()->regenerate();
             return redirect()->intended(route('products.index'));

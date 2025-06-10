@@ -93,7 +93,7 @@
                             $mensagem .= "- " . ($produto['nome'] ?? '') . " (Qtd: " . ($produto['quantidade'] ?? '') . ", Preço: R$ " . number_format($produto['preco'] ?? 0, 2, ',', '.') . ")\n";
                         }
                         $mensagem .= "Total: R$ " . number_format($total, 2, ',', '.');
-                        $whatsappLink = 'https://web.whatsapp.com/send?phone=5542998403542&text=' . urlencode($mensagem);
+                        $whatsappLink = 'https://web.whatsapp.com/send?phone=5542999640097&text=' . urlencode($mensagem);
                     @endphp
 
                     <a href="{{ $whatsappLink }}" target="_blank" class="agri-btn agri-btn-whatsapp">

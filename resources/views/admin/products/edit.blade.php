@@ -20,27 +20,27 @@
 
         <div class="form-group">
             <label for="name">Nome:</label>
-            <input type="text" name="name" value="{{ old('name', $product->name) }}" class="form-control" required>
+            <input type="text" name="name" id="name" value="{{ old('name', $product->name) }}" class="form-control" required>
         </div>
 
         <div class="form-group">
             <label for="price">Preço:</label>
-            <input type="text" name="price" value="{{ old('price', number_format($product->price, 2, ',', '')) }}" class="form-control" required>
+            <input type="text" name="price" id="price" value="{{ old('price', number_format($product->price, 2, ',', '')) }}" class="form-control" required>
         </div>
 
         <div class="form-group">
             <label for="quantity">Quantidade:</label>
-            <input type="number" name="quantity" value="{{ old('quantity', $product->quantity) }}" class="form-control" min="0" required>
+            <input type="number" name="quantity" id="quantity" value="{{ old('quantity', $product->quantity) }}" class="form-control" min="0" required>
         </div>
 
         <div class="form-group">
             <label for="description">Descrição:</label>
-            <textarea name="description" class="form-control" required>{{ old('description', $product->description) }}</textarea>
+            <textarea name="description" id="description" class="form-control" required>{{ old('description', $product->description) }}</textarea>
         </div>
 
         <div class="form-group">
             <label for="category">Categoria:</label>
-            <select name="category" class="form-control" required>
+            <select name="category" id="category" class="form-control" required>
                 <option value="congelado" {{ old('category', $product->category) == 'congelado' ? 'selected' : '' }}>Congelado</option>
                 <option value="panificado" {{ old('category', $product->category) == 'panificado' ? 'selected' : '' }}>Panificado</option>
                 <option value="fruta" {{ old('category', $product->category) == 'fruta' ? 'selected' : '' }}>Fruta</option>
@@ -50,10 +50,10 @@
 
         <div class="form-group">
             <label for="image">Imagem:</label>
-            <input type="file" name="image" class="form-control-file">
+            <input type="file" name="image" id="image" class="form-control-file">
             @if ($product->image)
                 <div class="mt-2">
-                    <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" style="max-width: 150px;">
+                    <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}">
                 </div>
             @endif
         </div>

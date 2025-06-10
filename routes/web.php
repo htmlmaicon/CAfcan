@@ -10,7 +10,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\AdminLoginController;
 
-// Página de boas-vindas (teste ou exemplo)
+// Página de teste
 Route::get('/welcome', function () {
     return view('welcome');
 });
@@ -22,33 +22,30 @@ Route::get('/', [CoopControler::class, 'Home'])->name('home');
 Route::get('/finalizar', [CoopControler::class, 'Finalizar'])->name('finalizar');
 Route::get('/entrega', [CoopControler::class, 'Entrega'])->name('entrega');
 Route::get('/endereco', [CoopControler::class, 'Endereco'])->name('endereco');
-Route::get('/retirada', [CoopControler::class, 'Retirada'])->name('retirada');
+ 
+Route::get('/retirada', [CoopControler::class, 'Retirada'])->middleware('auth:cliente')->name('retirada');
 
-// =====================
-// Carrinho (público, mas com throttle)
-// =====================
+// Carrinho
 Route::middleware(['throttle:30,1'])->group(function () {
     Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 });
 
-// =====================
-// Checkout e Pedidos (AGORA PÚBLICOS)
-// =====================
+// Checkout e Pedidos
 Route::post('/pagamento', [CheckoutController::class, 'finalizarPedido'])->name('pagamento');
 Route::post('/checkout/endereco', [CheckoutController::class, 'salvarEnderecoEntrega'])->name('salvar.endereco.entrega');
-Route::get('/pedidos', [PedidoController::class, 'index'])->name('pedidos.index');
+Route::get('/pedidos', [PedidoController::class, 'index'])->middleware('auth:cliente')->name('pedidos.index');
 
-// Exibe a tela de pagamento (pública)
+// Tela de pagamento
 Route::get('/pagamento', function () {
     return view('Pagamento.pagamento');
 })->name('pagamento.form');
 
 // =====================
-// Área Administrativa - Produtos (apenas admin autenticado)
+// Área Admin (guard: web)
 // =====================
-Route::prefix('admin/products')->name('products.')->middleware(['auth', 'can:isAdmin'])->group(function () {
+Route::prefix('admin/products')->name('products.')->middleware(['auth:web', 'can:isAdmin'])->group(function () {
     Route::get('/', [ProductController::class, 'index'])->name('index');
     Route::get('/create', [ProductController::class, 'create'])->name('create');
     Route::get('/{product}/edit', [ProductController::class, 'edit'])->name('edit');
@@ -58,7 +55,7 @@ Route::prefix('admin/products')->name('products.')->middleware(['auth', 'can:isA
 });
 
 // =====================
-// Login e Registro do Cliente (TODAS PÚBLICAS)
+// Login Cliente (guard: cliente)
 // =====================
 Route::prefix('cliente')->group(function () {
     Route::get('/login', [ClienteLoginController::class, 'showLoginForm'])->name('cliente.login');
@@ -69,9 +66,8 @@ Route::prefix('cliente')->group(function () {
 });
 
 // =====================
-// Login Admin
+// Login Admin (guard: web)
 // =====================
 Route::get('/admin/login', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
-Route::get('/login', [AdminLoginController::class, 'showLoginForm'])->name('login');
 Route::post('/admin/login', [AdminLoginController::class, 'login'])->name('admin.login.post');
 Route::post('/admin/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');

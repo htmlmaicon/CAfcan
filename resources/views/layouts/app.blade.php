@@ -28,7 +28,7 @@
                     @auth('cliente')
                     <li><a href="{{ route('pedidos.index') }}"><i class="fas fa-clipboard-list"></i> <span>Pedidos</span></a></li>
                     @endauth
-                    <li><a href="#"><i class="fas fa-cog"></i> <span>Configurações</span></a></li>
+                    
                 </ul>
             </nav>
         </aside>

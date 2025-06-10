@@ -1,4 +1,5 @@
 <?php
+
  
 namespace App\Http\Controllers;
 
@@ -10,15 +11,15 @@ class CheckoutController extends Controller
 {
     public function salvarEnderecoEntrega(Request $request)
     {
+        // Permite salvar endereço apenas se o cliente estiver autenticado
         $cliente = auth('cliente')->user();
 
-        // Valida e salva endereço apenas se for entrega
-        if ($request->tipo_entrega === 'entrega') {
+        if ($request->tipo_entrega === 'entrega' && $cliente) {
             $data = $request->validate([
                 'rua' => 'required|string|max:100',
                 'numero' => 'required|numeric|digits_between:1,100',
                 'bairro' => 'nullable|string|max:100',
-                'cep' => 'nullable|string|max:20',
+                'cep' => ['nullable', 'regex:/^\d{8}$/'], // cep com 8 dígitos numéricos
             ]);
 
             $cliente->endereco()->updateOrCreate(
@@ -38,10 +39,7 @@ class CheckoutController extends Controller
 
     public function finalizarPedido(Request $request)
     {
-        if (!auth('cliente')->check()) {
-            return redirect()->route('pagamento')->withErrors(['auth' => 'Você precisa se autenticar para finalizar o pagamento.']);
-        }
-
+        // Torna público: não exige autenticação
         $cliente = auth('cliente')->user();
 
         $cartItems = session('cart', []);
@@ -66,9 +64,9 @@ class CheckoutController extends Controller
 
         $tipo_entrega = session('tipo_entrega', 'entrega');
 
-        // Busca o endereço do cliente se for entrega
+        // Busca o endereço do cliente se for entrega e autenticado
         $endereco = null;
-        if ($tipo_entrega === 'entrega' && $cliente->endereco) {
+        if ($tipo_entrega === 'entrega' && $cliente && $cliente->endereco) {
             $endereco = json_encode([
                 'rua' => $cliente->endereco->rua,
                 'numero' => $cliente->endereco->numero,
@@ -79,9 +77,9 @@ class CheckoutController extends Controller
 
         try {
             Pedido::create([
-                'cliente_id' => $cliente->id,
-                'nome' => $cliente->nome,
-                'telefone' => $cliente->telefone,
+                'cliente_id' => $cliente->id ?? null,
+                'nome' => $cliente->nome ?? $request->input('nome', 'Visitante'),
+                'telefone' => $cliente->telefone ?? $request->input('telefone', ''),
                 'tipo_entrega' => $tipo_entrega,
                 'endereco' => $endereco,
                 'produtos' => json_encode($produtos),

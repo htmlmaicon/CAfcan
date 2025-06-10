@@ -19,13 +19,13 @@
         <div class="agri-delivery-option">
             <input type="radio" name="tipo_entrega" value="retirada" id="retirada"
                 {{ old('tipo_entrega', 'retirada') === 'retirada' ? 'checked' : '' }} class="agri-radio">
-            <label for="retirada" class="agri-radio-label">Retirar no endereço: Manoel Lopes de Oliveira, 2870 - Centro (sem taxa)</label>
+            <label for="retirada" class="agri-radio-label">Retirar no endereço: Manoel Lopes de Oliveira, 2870 - Centro  </label>
         </div>
 
         <div class="agri-delivery-option">
             <input type="radio" name="tipo_entrega" value="entrega" id="entrega"
                 {{ old('tipo_entrega') === 'entrega' ? 'checked' : '' }} class="agri-radio">
-            <label for="entrega" class="agri-radio-label">Entregar no meu endereço (R$5,00 taxa)</label>
+            <label for="entrega" class="agri-radio-label">Entregar no meu endereço  </label>
         </div>
 
         <div id="endereco-fields" class="agri-address-fields">
